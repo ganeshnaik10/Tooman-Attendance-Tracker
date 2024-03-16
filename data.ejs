@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Display</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0bbbcf;
+            color: #ffffff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #dddddd;
+        }
+
+        .avg-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0bbbcf;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #077c8c;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+            border-right: 1px solid #000000;
+        }
+
+        li:last-child {
+            border-right: none;
+        }
+
+        li a {
+            display: block;
+            color: #ffffff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #414040;
+        }
+
+        .active {
+            background-color: #0bbbcf;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a class="active" href="#">DATA</a></li>
+        <li style="float:right"><a href="#about">About</a></li>
+    </ul>
+    <div class="container">
+        <h1 style="text-align: center;">Attendance</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Attend</th>
+                    <th>Total</th>
+                    <th>Attendance Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(item => { %>
+                    <tr>
+                        <td><%= item.subject %></td>
+                        <td><%= item.attend %></td>
+                        <td><%= item.total %></td>
+                        <td><%= item.percentage %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="avg-container">
+        <button onclick="calculateAverage()">Calculate Average Percentage</button>
+        <p id="averagePercentage"></p>
+    </div>
+
+    <script>
+        function calculateAverage() {
+            console.log('Button clicked!');
+            const percentages = <%= JSON.stringify(data.map(item => parseFloat(item.percentage))) %>;
+
+
+            console.log('Percentages:', percentages); 
+            const sum = percentages.reduce((acc, curr) => acc + parseFloat(curr), 0);
+            console.log('Sum:', sum); 
+            const average = sum / percentages.length;
+            console.log('Average:', average); 
+            document.getElementById('averagePercentage').textContent = `Average Percentage: ${average.toFixed(2)}%`;
+        }  
+        </script>
+</body>
+</html>

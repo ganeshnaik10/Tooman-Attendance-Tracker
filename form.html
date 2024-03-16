@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>Update Data Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+            border-right: 1px solid #000000;
+        }
+
+        li:last-child {
+            border-right: none;
+        }
+
+        li a {
+            display: block;
+            color: #ffffff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #414040;
+        }
+
+        .active {
+            background-color: #0bbbcf;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background-color: #0bbbcf;
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0aa7ba;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li><a class="active" href="#" id="home-link">Home</a></li>
+        <li><a href="#" id="data-link">DATA</a></li>
+        <li style="float:right"><a href="#about">About</a></li>
+    </ul>
+    <h2>Update Data</h2>
+    <form id="submit-form">
+        <label for="subject">Subject:</label>
+        <select id="subject" name="subject">
+            <option value="DS">DS</option>
+            <option value="CGA">CGA</option>
+            <option value="COST">COST</option>
+            <option value="FSDJ">FSDJ</option>
+            <option value="SET">SET</option>
+        </select><br><br>
+        <label for="attend">Attend:</label>
+        <input type="number" id="attend" name="attend" required><br><br>
+        <label for="total">Total:</label>
+        <input type="number" id="total" name="total" required><br><br>
+        <input type="submit" value="Submit" required><br>
+        <div id="error-message" class="error-message"></div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('data-link').addEventListener('click', function (event) {
+                event.preventDefault();
+
+                fetch('/data')
+                    .then(response => response.text())
+                    .then(html => {
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            });
+
+            document.getElementById('home-link').addEventListener('click', function (event) {
+                
+                window.location.href = '/';
+            });
+
+            document.getElementById('submit-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                
+                const formData = new FormData(this);
+                const data = {};
+                for (const [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                
+                fetch('/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert('Data updated successfully!');
+                        } else {
+                            const errorMessage = result.error || 'An error occurred while updating data.';
+                            document.getElementById('error-message').textContent = errorMessage;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('error-message').textContent = 'An error occurred while updating data.';
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
