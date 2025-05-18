@@ -1,4 +1,4 @@
-# attendance-app
+# Tooman – Attendance Tracker
 <h1>Attendance Management System</h1>
 This is a simple web application built with Node.js, Express.js, and MongoDB that helps users manage attendance data for multiple subjects and calculate overall attendance percentage.
 <br>
